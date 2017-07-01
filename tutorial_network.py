@@ -1,5 +1,5 @@
 """
-A simple autoencoder for the MNIST dataset.
+The tutorial code.
 """
 
 import numpy as np
