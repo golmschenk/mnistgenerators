@@ -2,6 +2,10 @@
 A simple autoencoder for the MNIST dataset.
 """
 
+import os
+import numpy as np
+import scipy.misc
+
 import torch
 import torchvision
 
@@ -16,13 +20,13 @@ class Autoencoder:
         self.test_data_loader = data_loaders[1]
         self.data_classes = tuple(map(str, list(range(10))))
         self.net = Net()
-        self.optimizer = torch.optim.Adam(self.net.parameters(), lr=0.0001)
+        self.optimizer = torch.optim.Adam(self.net.parameters(), lr=0.0001,)
 
     def train(self):
         """
         Train the network.
         """
-        for epoch in range(2):
+        for epoch in range(10):
             running_loss = 0.0
             for step, examples in enumerate(self.train_data_loader):
                 images, labels = examples
@@ -36,7 +40,16 @@ class Autoencoder:
                 if step % 2000 == 1999:
                     print('[%d, %5d] loss: %.3f' % (epoch + 1, step + 1, running_loss / 2000))
                     running_loss = 0.0
-        
+                    file_name = 'epoch_{}_step_{}'.format(epoch, step)
+                    save_original_decoded_pair_to_image_file(images[0], decoded_images[0], file_name)
+
+
+def save_original_decoded_pair_to_image_file(original_image_variable, decoded_image_variable, file_name):
+    original_image = original_image_variable[0].data.numpy()
+    decoded_image = decoded_image_variable[0].data.numpy()
+    combined_image = np.concatenate([original_image, decoded_image], axis=1)
+    scipy.misc.imsave(os.path.join('results', '{}.jpg'.format(file_name)), combined_image)
+
 
 class Net(torch.nn.Module):
     """
@@ -48,9 +61,9 @@ class Net(torch.nn.Module):
         self.convolution1 = torch.nn.Conv2d(1, 10, kernel_size=5, stride=2, padding=1)
         self.convolution2 = torch.nn.Conv2d(10, 20, kernel_size=5, stride=2)
         self.fully_connected1 = torch.nn.Linear(20 * 5 * 5, 120)
-        self.fully_connected2 = torch.nn.Linear(120, 84)
+        self.fully_connected2 = torch.nn.Linear(120, 28)
         # Decode.
-        self.fully_connected3 = torch.nn.Linear(84, 120)
+        self.fully_connected3 = torch.nn.Linear(28, 120)
         self.fully_connected4 = torch.nn.Linear(120, 20 * 5 * 5)
         self.transposed_convolution1 = torch.nn.ConvTranspose2d(20, 10, kernel_size=5, stride=2)
         self.transposed_convolution2 = torch.nn.ConvTranspose2d(10, 1, kernel_size=5, stride=2)

@@ -167,3 +167,4 @@ ENV/
 .ropeproject
 
 /data/
+/results/
