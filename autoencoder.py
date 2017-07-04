@@ -65,7 +65,7 @@ class Net(torch.nn.Module):
     The class for the network structure.
     """
     def __init__(self):
-        super(Net, self).__init__()
+        super().__init__()
         # Encode.
         self.convolution1 = torch.nn.Conv2d(1, 10, kernel_size=5, stride=2, padding=1)
         self.convolution2 = torch.nn.Conv2d(10, 20, kernel_size=5, stride=2)
