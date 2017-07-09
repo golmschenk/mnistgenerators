@@ -20,7 +20,7 @@ class Autoencoder:
         self.test_data_loader = data_loaders[1]
         self.data_classes = tuple(map(str, list(range(10))))
         self.net = Net()
-        self.optimizer = torch.optim.Adam(self.net.parameters(), lr=0.0001,)
+        self.optimizer = torch.optim.Adam(self.net.parameters(), lr=0.0001)
         self.latent_loss = None
 
     def train(self):
